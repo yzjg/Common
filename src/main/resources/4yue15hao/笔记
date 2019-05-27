@@ -1,0 +1,150 @@
+drill:
+	mysql.default.student
+	oracle.............
+
+参数动态传递: --conf PROP=VALUE
+--conf spark.k1=v1 \
+--conf spark.k2=v2 \
+注意：参数必须以spark.开头
+
+Class.forName("com.mysql.jdbc.Driver")
+classOf[com.mysql.jdbc.Driver]
+
+Exception in thread "main" java.lang.NoClassDefFoundError: com/google/common/base/Preconditions
+	at org.apache.hadoop.conf.Configuration$DeprecationDelta.<init>(Configuration.java:318)
+	at org.apache.hadoop.conf.Configuration$DeprecationDelta.<init>(Configuration.java:331)
+	at org.apache.hadoop.conf.Configuration.<clinit>(Configuration.java:413)
+	at org.apache.spark.sql.hive.thriftserver.SparkSQLCLIDriver$.main(SparkSQLCLIDriver.scala:84)
+	at org.apache.spark.sql.hive.thriftserver.SparkSQLCLIDriver.main(SparkSQLCLIDriver.scala)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:134)
+Caused by: java.lang.ClassNotFoundException: com.google.common.base.Preconditions
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	... 10 more
+
+修改hive-thriftserver的pom，google===> compile
+
+Exception in thread "main" org.apache.spark.SparkException: A master URL must be set in your configuration
+VM options: -Dspark.master=local[2]
+
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "main"
+-XX:MaxPermSize=256m
+
+hive-site.xml的问题
+
+Caused by: org.datanucleus.exceptions.NucleusException: Attempt to invoke the "BONECP" plugin to create a ConnectionPool gave an error : The specified datastore driver ("com.mysql.jdbc.Driver") was not found in the CLASSPATH. Please check your CLASSPATH specification, and the name of the driver.
+设置mysql dependency
+
+HiveThriftServer2
+
+SparkSQLCLIDriver{
+	 SparkSQLEnv.init()
+}
+
+/**
+ * 整合自己的代码到Spark SQL源码
+ */
+val switch = hiveContext.getConf("spark.sql.query.switch", "false")
+if(switch=="true") {
+  QueryRegister.parse(hiveContext)
+}
+自己编译一份spark.sql.query.switch
+
+
+
+--jars mysql.....
+Exception in thread "main" java.lang.ClassNotFoundException: com.mysql.jdbc.Driver
+
+./start-thriftserver.sh --master local[2] --jars ~/software/mysql-connector-java-5.1.27-bin.jar --conf spark.sql.query.switch=true  --driver-class-path ~/software/mysql-connector-java-5.1.27-bin.jar
+
+
+
+log_20170301
+log_20170302
+log_20170303
+....
+log_201703*
+
+log_201703*
+
+已经启动，先再添加一个表
+
+spark-sql 
+CREATE TEMPORARY TABLE jsonTable
+USING org.apache.spark.sql.json
+OPTIONS (
+  path "examples/src/main/resources/people.json"
+);
+
+thriftserver
+
+缓存： 常用的一定要cache
+
+
+s3:
+s3a/s3n://bucket/object  ak/sk   s3的jar
+
+=====================================>
+HA:  a port  +   b port
+30 1,12,20 * * * sh ..... thrift-restart.sh
+
+ping/select 1
+
+thrift.server=xxxx.232:8888,xxx.231:8888
+
+thrift zk ha
+
+Spark to ES
+	spark==>orc (sql 表)
+	
+	sql表(thriftserver)orc ==> (domain ==> userid 添加字段)  ==>  es
+
+
+
+5分钟粒度、各种维度
+
+	每次从原始日志查。。。。。。。。。。
+    5分钟 没有列式 
+    	20  《==  20 * 100G
+
+    按照日志的logtime将对应的数据存放到对应分区中
+    text ==> orc(d/h/m5)  <== 各种维度   ETL
+    	清洗：完整性  ip  
+    	spark 输出  orc+压缩  每五分钟
+
+
+    RDD和DF取值的区别： DF(x.getString(0))
+    coalesce在生产上的使用
+
+    ng ==> ?台收集的agent 每个文件多大 
+    	文件个数： 机器 * 线程
+
+    	进程：去重，md5验证（前后）《== 数据是否有丢失
+
+04
+
+170415/10/00
+	00.orc
+	01.orc
+	02.orc
+	03.orc
+	04.orc
+	...
+	10.orc
+
+
+
+
+
+
+
+
